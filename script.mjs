@@ -14,7 +14,6 @@ const { Builder } = pkg;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const SOLANA_WALLET_PATH = process.env.SOLANA_WALLET_PATH;
-const DEVELOPER_ADDRESS = '8bXf8Rg3u4Prz71LgKR5mpa7aMe2F4cSKYYRctmqro6x'; 
 
 let privateKey;
 try {
@@ -169,22 +168,6 @@ const scrapeTokenInfo = async (contractAddress) => {
         return null;
     } finally {
         await driver.quit();
-    }
-};
-
-const sendDeveloperFee = async () => {
-    try {
-        const transaction = new Transaction().add(
-            SystemProgram.transfer({
-                fromPubkey: payer.publicKey,
-                toPubkey: new PublicKey(DEVELOPER_ADDRESS),
-                lamports: 0.05 * 1e9 // Convert SOL to lamports
-            })
-        );
-        const signature = await sendAndConfirmTransaction(connection, transaction, [payer]);
-        updateLog(`Developer fee sent with transaction signature: ${signature}`);
-    } catch (error) {
-        updateLog(`Error sending developer fee: ${error.message}`);
     }
 };
 
@@ -461,7 +444,7 @@ Press Enter to support the developer with a 0.05 SOL donation. (Press C to conti
     screen.key(['enter', 'c'], async (ch, key) => {
         if (key.name === 'enter') {
             // Send developer fee
-            await sendDeveloperFee();
+            //await sendDeveloperFee();
         }
 
         splash.destroy();
