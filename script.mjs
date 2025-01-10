@@ -39,10 +39,10 @@ const MINIMUM_BUY_AMOUNT = parseFloat(process.env.MINIMUM_BUY_AMOUNT || 0.015);
 const MAX_BONDING_CURVE_PROGRESS = parseInt(process.env.MAX_BONDING_CURVE_PROGRESS || 10);
 const SELL_BONDING_CURVE_PROGRESS = parseInt(process.env.SELL_BONDING_CURVE_PROGRESS || 15);
 const PROFIT_TARGET_1 = 1.25; // 25% increase
-const PROFIT_TARGET_2 = 1.25; // Another 25% increase
+const PROFIT_TARGET_2 = 1.5; // Another 25% increase
 const STOP_LOSS_LIMIT = 0.90; // 10% decrease
-const MONITOR_INTERVAL = 5 * 1000; // 5 seconds
-const SELL_TIMEOUT = 2 * 60 * 1000; // 2 minutes
+const MONITOR_INTERVAL = 4 * 1000; // 4 seconds
+const SELL_TIMEOUT = 1 * 60 * 1000; // 1 minutes
 const TRADE_DELAY = 90 * 1000; // 90 seconds delay
 const PRIORITY_FEE_BASE = 0.0003; // Base priority fee
 
@@ -293,14 +293,14 @@ const monitorTrade = async (mint, initialMarketCap, initialBondingCurve) => {
                 await sellTokens(mint, 1.00); // Sell all to stop loss
                 break;
             } else if (tokenInfo.bondingCurve >= SELL_BONDING_CURVE_PROGRESS) {
-                updateLog(`Bonding curve reached ${SELL_BONDING_CURVE_PROGRESS}%. Selling 75% of tokens for mint: ${mint}`);
-                await sellTokens(mint, 0.75); // Sell 75% due to bonding curve and keep 25% moonbag
+                updateLog(`Bonding curve reached ${SELL_BONDING_CURVE_PROGRESS}%. Selling 100% of tokens for mint: ${mint}`);
+                await sellTokens(mint, 1); // Sell 75% due to bonding curve and keep 25% moonbag
                 break;
             }
 
             if (tokenInfo.marketcap > lastMarketCap * PROFIT_TARGET_2) {
-                updateLog('Price increased another 25%, selling 75% of remaining tokens.');
-                await sellTokens(mint, 0.75);
+                updateLog('Price increased another 25%, selling all remaining tokens.');
+                await sellTokens(mint, 1);
                 lastMarketCap = tokenInfo.marketcap;
             }
 
